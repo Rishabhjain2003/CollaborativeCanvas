@@ -1,0 +1,25 @@
+{
+  "name": "collaborative-canvas",
+  "version": "1.0.0",
+  "description": "Vanilla JS collaborative canvas with Socket.io",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Atv432/Flamai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Atv432/Flamai/issues"
+  },
+  "homepage": "https://github.com/Atv432/Flamai#readme"
+}

@@ -1,0 +1,271 @@
+:root {
+    --bg: #0f1720;
+    --panel: #111827;
+    --muted: #9ca3af;
+    --accent: #2563eb;
+    --hover-accent: #1d4ed8;
+}
+
+/* Override Bootstrap defaults for dark theme */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+/* Navbar customization */
+.navbar {
+    background: var(--panel) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.75rem 1.5rem;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+/* Status badge */
+#status {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+#status.Connected {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+#status.Disconnected {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+}
+
+/* Toolbar styling */
+.container-fluid.bg-white {
+    background: var(--panel) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Tool buttons (Brush/Eraser) */
+#brushBtn, #eraserBtn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: #1a1f2e;
+    color: #e5e7eb;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+#brushBtn:hover, #eraserBtn:hover {
+    background: #252b3b;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+#brushBtn.active, #eraserBtn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+/* Color palette buttons - INCREASED SIZE */
+#colors {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#colors button {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+#colors button:hover {
+    transform: scale(1.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+#colors button.active {
+    border-color: var(--accent);
+    border-width: 3px;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+/* Form controls */
+.form-label {
+    color: #e5e7eb;
+    margin-bottom: 0;
+}
+
+#size {
+    accent-color: var(--accent);
+}
+
+#sizeValue {
+    min-width: 35px;
+    text-align: center;
+    background: var(--accent);
+}
+
+/* Action buttons */
+#undo, #redo, #clear, #download {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #1a1f2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e5e7eb;
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
+}
+
+#undo:hover, #redo:hover {
+    background: #252b3b;
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+#clear:hover {
+    background: #7f1d1d;
+    border-color: #ef4444;
+    color: #fff;
+}
+
+#download:hover {
+    background: #14532d;
+    border-color: #22c55e;
+    color: #fff;
+}
+
+/* Active users section */
+.d-flex.align-items-center.gap-2 {
+    color: #e5e7eb;
+}
+
+#clients {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#clients .badge {
+    padding: 6px 10px;
+    background: rgba(37, 99, 235, 0.2);
+    color: var(--accent);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    font-weight: 500;
+}
+
+/* Canvas area */
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.canvas-wrap {
+    position: relative;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    display: inline-block;
+}
+
+canvas {
+    display: block;
+    border-radius: 6px;
+    cursor: crosshair;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Cursor overlay */
+#cursors {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    pointer-events: none;
+}
+
+.cursor {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6), 0 0 4px rgba(255, 255, 255, 0.8);
+    border: 2px solid #fff;
+}
+
+/* Footer */
+footer.footer {
+    padding: 1rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.875rem;
+    background: transparent;
+    margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #colors button {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .toolbar {
+        gap: 8px;
+    }
+    
+    #brushBtn, #eraserBtn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .canvas-wrap {
+        padding: 8px;
+    }
+    
+    #cursors {
+        left: 8px;
+        top: 8px;
+    }
+}
+
+/* Smooth scrollbar for canvas container */
+.card-body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.card-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.card-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.card-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
