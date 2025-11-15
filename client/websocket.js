@@ -11,7 +11,6 @@
   
   let currentUserId = null;
 
-  // Request initial snapshot
   socket.on("connect", () => {
     socket.emit("join-room", "default");
     socket.emit("requestLatest");
@@ -24,13 +23,16 @@
     document.getElementById("status").innerHTML = '<i class="bi bi-circle-fill me-1"></i>Disconnected';
   });
 
-  // Receive user info
   socket.on("user-info", (userInfo) => {
     currentUserId = socket.id;
     console.log("Your username:", userInfo.username);
   });
 
-  // Update user list in sidebar
+  // Store user map for hover tooltips
+  socket.on("user-map", (userMap) => {
+    window.userMap = userMap;
+  });
+
   socket.on("user-list", (users) => {
     const userListEl = document.getElementById("userList");
     userListEl.innerHTML = "";
@@ -38,8 +40,6 @@
     users.forEach(user => {
       const userItem = document.createElement("div");
       userItem.className = "user-item" + (user.id === currentUserId ? " current-user" : "");
-      
-      const initials = user.username.substring(0, 2);
       
       userItem.innerHTML = `
         <div class="user-avatar" style="background: ${user.color};">
@@ -55,34 +55,28 @@
     });
   });
 
-  // Server sends full history at connect
   socket.on("canvas-history", (ops) => {
     if (Array.isArray(ops)) app.setFromServerHistory(ops);
   });
 
-  // New stroke from server
   socket.on("draw", (op) => {
     app.applyRemote(op);
   });
 
-  // Undo broadcast
   socket.on("undo-op", ({ opId }) => {
     app.handleUndoOp(opId);
   });
 
-  // Redo broadcast
   socket.on("redo-op", ({ opId }) => {
     app.handleRedoOp(opId);
   });
 
-  // Clear only user strokes broadcast
   socket.on("clear-user-strokes", (data) => {
     if (Array.isArray(data.ops)) {
       app.handleClearUserStrokes(data.ops);
     }
   });
 
-  // Snapshot loading
   socket.on("snapshot", (data) => {
     if (data?.snapshot) {
       const img = new Image();
@@ -95,7 +89,6 @@
     }
   });
 
-  // Remote cursors
   socket.on("cursor", ({ id, x, y, color }) => {
     if (!cursors[id]) {
       const c = document.createElement("div");

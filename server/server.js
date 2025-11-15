@@ -13,14 +13,9 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, "..", "client")));
 
-// Each room stores its own operations
-// roomsOperations = { roomName: [ op, op, ... ] }
 const roomsOperations = {};
-
-// Store user information: { socketId: { username, color } }
 const users = {};
 
-// Generate random 8-character alphanumeric username
 function generateUsername() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let username = '';
@@ -30,13 +25,11 @@ function generateUsername() {
   return username;
 }
 
-// Generate random color for user avatar
 function generateUserColor() {
   const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Broadcast user list to all clients in a room
 function broadcastUserList(room) {
   const clients = roomStore.listClients(room);
   const userList = clients.map(client => ({
@@ -45,12 +38,18 @@ function broadcastUserList(room) {
     color: users[client.id]?.color || '#888888'
   }));
   io.to(room).emit("user-list", userList);
+  
+  // Also broadcast user map for hover functionality
+  const userMap = {};
+  clients.forEach(client => {
+    userMap[client.id] = users[client.id]?.username || 'Unknown';
+  });
+  io.to(room).emit("user-map", userMap);
 }
 
 io.on("connection", (socket) => {
   console.log("Connected:", socket.id);
   
-  // Generate username and color for new user
   users[socket.id] = {
     username: generateUsername(),
     color: generateUserColor()
@@ -58,29 +57,22 @@ io.on("connection", (socket) => {
   
   let currentRoom = null;
 
-  // Join a room
   socket.on("join-room", (room) => {
     if (currentRoom) socket.leave(currentRoom);
     currentRoom = room;
     socket.join(room);
     roomStore.addClient(room, { id: socket.id });
 
-    // Make sure room storage exists
     if (!roomsOperations[room]) roomsOperations[room] = [];
 
-    // Send existing drawing operations to newly joined client
     socket.emit("canvas-history", roomsOperations[room]);
-    
-    // Send user info to the newly connected client
     socket.emit("user-info", users[socket.id]);
     
-    // Broadcast updated user list to all clients in the room
     broadcastUserList(room);
     
     console.log(socket.id, "joined room:", room, "as", users[socket.id].username);
   });
 
-  // Draw event
   socket.on("draw", (ev) => {
     if (!currentRoom) return;
     if (
@@ -92,6 +84,7 @@ io.on("connection", (socket) => {
     ) {
       const op = {
         userId: socket.id,
+        username: users[socket.id]?.username || 'Unknown', // Include username
         prevX: ev.prevX,
         prevY: ev.prevY,
         x: ev.x,
@@ -108,7 +101,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Clear only user's strokes
   socket.on("clear", () => {
     if (!currentRoom) return;
     const ops = roomsOperations[currentRoom];
@@ -122,7 +114,6 @@ io.on("connection", (socket) => {
     io.to(currentRoom).emit("clear-user-strokes", { ops: removed });
   });
 
-  // Undo
   socket.on("undo", () => {
     if (!currentRoom) return;
     const ops = roomsOperations[currentRoom];
@@ -135,7 +126,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Redo
   socket.on("redo", () => {
     if (!currentRoom) return;
     const ops = roomsOperations[currentRoom];
@@ -148,7 +138,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Cursor moves
   socket.on("cursor", (pos) => {
     if (!currentRoom) return;
     io.to(currentRoom).emit("cursor", {
@@ -159,7 +148,6 @@ io.on("connection", (socket) => {
     });
   });
 
-  // Snapshots
   socket.on("saveSnapshot", (data) => {
     if (!currentRoom) return;
     if (data?.snapshot) drawingState.pushSnapshot(currentRoom, data.snapshot);
@@ -171,7 +159,6 @@ io.on("connection", (socket) => {
     if (s) socket.emit("snapshot", { snapshot: s });
   });
 
-  // Disconnect
   socket.on("disconnect", () => {
     if (currentRoom) {
       roomStore.removeClient(currentRoom, socket.id);
