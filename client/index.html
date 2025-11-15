@@ -76,22 +76,26 @@
           </button>
         </div>
       </div>
-
-      <!-- Active Users -->
-      <div class="col-12 col-md-auto">
-        <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-people-fill text-primary"></i>
-          <span class="fw-semibold">Active Users:</span>
-          <div id="clients" class="d-flex gap-1"></div>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- Canvas Area -->
+  <!-- Main Content with Sidebar -->
   <main class="container-fluid py-4">
-    <div class="row justify-content-center">
-      <div class="col-12 col-xl-10">
+    <div class="row">
+      <!-- Left Sidebar - User List -->
+      <div class="col-md-2 col-lg-2">
+        <div class="card shadow-sm user-sidebar">
+          <div class="card-header bg-primary text-white">
+            <h6 class="mb-0"><i class="bi bi-people-fill me-2"></i>Active Users</h6>
+          </div>
+          <div class="card-body p-2" id="userList">
+            <!-- Users will be dynamically added here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas Area -->
+      <div class="col-md-10 col-lg-10">
         <div class="card shadow">
           <div class="card-body p-0 position-relative" style="overflow: auto;">
             <div class="canvas-wrap position-relative d-inline-block">

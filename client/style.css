@@ -151,22 +151,77 @@ body {
     color: #fff;
 }
 
-/* Active users section */
-.d-flex.align-items-center.gap-2 {
-    color: #e5e7eb;
+/* User Sidebar Styles */
+.user-sidebar {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
 }
 
-#clients {
+.user-sidebar .card-header {
+    background: var(--accent) !important;
+    padding: 0.75rem 1rem;
+}
+
+.user-sidebar .card-body {
+    background: var(--panel);
+}
+
+.user-item {
     display: flex;
-    gap: 8px;
     align-items: center;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-#clients .badge {
-    padding: 6px 10px;
-    background: rgba(37, 99, 235, 0.2);
-    color: var(--accent);
+.user-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.user-info {
+    flex-grow: 1;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #e5e7eb;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
+.user-status {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.user-item.current-user {
+    background: rgba(37, 99, 235, 0.15);
     border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.user-item.current-user .user-name::after {
+    content: " (You)";
+    color: var(--accent);
     font-weight: 500;
 }
 
@@ -237,6 +292,11 @@ footer.footer {
         padding: 6px 12px;
         font-size: 0.9rem;
     }
+    
+    .user-sidebar {
+        max-height: 300px;
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -250,22 +310,26 @@ footer.footer {
     }
 }
 
-/* Smooth scrollbar for canvas container */
-.card-body::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+/* Smooth scrollbar for canvas container and user sidebar */
+.card-body::-webkit-scrollbar,
+.user-sidebar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-.card-body::-webkit-scrollbar-track {
+.card-body::-webkit-scrollbar-track,
+.user-sidebar::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
 }
 
-.card-body::-webkit-scrollbar-thumb {
+.card-body::-webkit-scrollbar-thumb,
+.user-sidebar::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
 }
 
-.card-body::-webkit-scrollbar-thumb:hover {
+.card-body::-webkit-scrollbar-thumb:hover,
+.user-sidebar::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
 }
