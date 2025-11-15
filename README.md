@@ -1,4 +1,4 @@
-# **Collaborative Canvas — Real-Time Drawing App**
+# Collaborative Canvas — Real-Time Drawing App
 
 A real-time, multi-user collaborative drawing application built with **HTML5 Canvas**, **Vanilla JavaScript**, **Node.js**, and **Socket.IO**.
 Features include live drawing sync, undo/redo, user-specific clearing, color selection, brush tools, remote cursors, and room support.
@@ -25,6 +25,7 @@ Fully deployable on **Render**, **Railway**, **DigitalOcean**, **Heroku**, etc.
 * 💾 **Snapshot/restore support**
 * 🏠 **Multiple rooms** (optional)
 * ⚡ Ultra-low latency using WebSockets
+* 🎯 **User stroke tracking:** Each brush stroke is associated with a unique user ID, enabling per-user undo, redo, and selective clearing without affecting other users' drawings.
 
 ---
 
@@ -43,7 +44,7 @@ Fully deployable on **Render**, **Railway**, **DigitalOcean**, **Heroku**, etc.
 * Node.js
 * Express.js
 * Socket.IO server
-* In-memory operation history
+* In-memory operation history with user tracking
 
 ---
 
@@ -193,9 +194,9 @@ const socket = io("https://your-backend-url.com");
 
 * Draw lines immediately for responsiveness
 * Emit drawing operations to server
-* Store local operations (brush strokes)
+* Store local operations (brush strokes) with user IDs
 * Redraw canvas based on operation history
-* Handle undo/redo
+* Handle undo/redo for current user only
 * Render remote user cursors
 
 ### **Server Responsibilities**
@@ -203,10 +204,22 @@ const socket = io("https://your-backend-url.com");
 * Maintain global list of all drawing operations
 * Tag each stroke with userId + opId
 * Broadcast new strokes to all clients
-* Handle per-user undo/redo
-* Handle per-user clear
+* Handle per-user undo/redo requests
+* Handle per-user clear (deactivate only user's strokes)
 * Serve static frontend files
 * Provide latest snapshots
+
+### **User Stroke Tracking Implementation**
+
+Each drawing operation includes:
+* **userId**: Unique identifier for the user who created the stroke
+* **opId**: Unique operation ID for the stroke
+* **active**: Boolean flag to mark if stroke is visible
+
+This enables:
+* Users to undo/redo only their own strokes
+* Users to clear only their own drawings
+* Preservation of other users' work during individual actions
 
 ---
 
@@ -221,6 +234,11 @@ const socket = io("https://your-backend-url.com");
 2. Open 2–3 browser tabs at `http://localhost:3000`
 
 3. Draw in any tab — it should instantly sync across all others
+
+4. Test user-specific features:
+   * Draw strokes in different tabs (different users)
+   * Use undo/redo in one tab — should only affect that user's strokes
+   * Use clear in one tab — should only remove that user's strokes
 
 ---
 
@@ -242,6 +260,13 @@ const socket = io("https://your-backend-url.com");
 
 * Backend must emit unique opIds per user
 * Frontend must only deactivate operations matching the current userId
+* Verify userId is properly assigned and transmitted
+
+### **❌ Undo affects other users' strokes**
+
+* Ensure each operation includes the correct userId
+* Verify undo logic filters operations by userId
+* Check that userId is consistent across the session
 
 ### **❌ Port already in use**
 
@@ -275,6 +300,7 @@ Pull requests are welcome! Please open an issue to discuss major changes before 
 * Test thoroughly with multiple clients
 * Update documentation as needed
 * Keep client and server logic separated
+* Ensure user tracking features work correctly
 
 ---
 
